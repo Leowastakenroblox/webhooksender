@@ -28,41 +28,62 @@
       </div>
     </div>
     <script>
-      const form = document.querySelector('form');
+       const form = document.querySelector('form');
 
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
+       form.addEventListener('submit', async (event) => {
+         event.preventDefault();
+       
+         const name = document.getElementById('name').value.trim();
+         const avatar = document.getElementById('avatar').value.trim();
+         const message = document.getElementById('message').value.trim();
+         const webhook = document.getElementById('webhook').value.trim();
+       
+         if (!name || !message || !webhook) {
+            const notificationfail = document.createElement('div');
+            notificationfail.classList.add('notificationfail');
+            notificationfail.innerText = 'Please fill in all the required forms';
+            document.body.appendChild(notificationfail);
+ 
+            setTimeout(() => {
+             document.body.removeChild(notificationfail);
+           }, 3000);
+           return;
+         }
+       
+         const payload = {
+           username: name,
+           avatar_url: avatar,
+           content: message,
+         };
+       
+         const response = await fetch(webhook, {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(payload),
+         });
+       
+         if (response.ok) {
+           const notification = document.createElement('div');
+           notification.classList.add('notification');
+           notification.innerText = 'Message sent successfully!';
+           document.body.appendChild(notification);
+       
+           setTimeout(() => {
+             document.body.removeChild(notification);
+           }, 3000);
+         } else {
+           const notificationfail = document.createElement('div');
+           notificationfail.classList.add('notificationfail');
+           notificationfail.innerText = 'Message Failed To SEnd';
+           document.body.appendChild(notificationfail);
 
-        const name = document.getElementById('name').value.trim();
-        const avatar = document.getElementById('avatar').value.trim();
-        const message = document.getElementById('message').value.trim();
-        const webhook = document.getElementById('webhook').value.trim();
-
-        if (!name || !message || !webhook) {
-          alert('Please fill in all required fields!');
-          return;
-        }
-
-        const payload = {
-          username: name,
-          avatar_url: avatar,
-          content: message,
-        };
-
-        const response = await fetch(webhook, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-
-        if (response.ok) {
-          alert('Message sent successfully!');
-        } else {
-          alert('Failed to send message!');
-        }
-      });
+           setTimeout(() => {
+            document.body.removeChild(notificationfail);
+          }, 3000);
+         }
+       });        
     </script>
   </body>
 </html>
