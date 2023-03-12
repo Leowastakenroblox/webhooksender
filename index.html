@@ -28,61 +28,66 @@
       </div>
     </div>
     <script>
-       const form = document.querySelector('form');
+      const form = document.querySelector('form');
+      const sendButton = document.getElementById('submit');
 
-       form.addEventListener('submit', async (event) => {
-         event.preventDefault();
-       
-         const name = document.getElementById('name').value.trim();
-         const avatar = document.getElementById('avatar').value.trim();
-         const message = document.getElementById('message').value.trim();
-         const webhook = document.getElementById('webhook').value.trim();
-       
-        if (!name || !message || !webhook) {
-          notifyfail('Please fill in all the required fields');
-          return;
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+      
+        const name = document.getElementById('name').value.trim();
+        const avatar = document.getElementById('avatar').value.trim();
+        const message = document.getElementById('message').value.trim();
+        const webhook = document.getElementById('webhook').value.trim();
+      
+       if (!name || !message || !webhook) {
+         notifyfail('Please fill in all the required fields');
+         return;
+       }
+      
+        const payload = {
+         username: name,
+         avatar_url: avatar,
+         content: message,
+        };
+      
+        const response = await fetch(webhook, {
+         method: 'POST',
+         headers: {
+           'Content-Type': 'application/json',
+         },
+         body: JSON.stringify(payload),
+        });
+      
+        if (response.ok) {
+         notify('Message sent successfully!');
+        } else {
+         notifyfail('Message Failed To Send');
         }
-       
-         const payload = {
-          username: name,
-          avatar_url: avatar,
-          content: message,
-         };
-       
-         const response = await fetch(webhook, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-         });
-       
-         if (response.ok) {
-          notify('Message sent successfully!');
-         } else {
-          notifyfail('Message Failed To Send');
-        }
-       });
-       function notify(text, type) {
-        const notification = document.createElement('div');
-        notification.classList.add('notification', type);
-        notification.textContent = text;
-      
-        document.body.appendChild(notification);
-      
-        // Calculate the position of the notification based on the existing notifications
-        const notifications = document.querySelectorAll('.notification');
-        const top = notifications.length > 1 ? notifications[notifications.length - 2].getBoundingClientRect().bottom + 10 : window.innerHeight - notification.offsetHeight - 10;
-        const right = 10;
-      
-        // Position the notification
-        notification.style.top = `${top}px`;
-        notification.style.right = `${right}px`;
-      
-        // Set a timeout to remove the notification after 5 seconds
-        setTimeout(() => {
-          notification.remove();
-        }, 5000);
+
+       if (isSpamming) {
+        timeoutId = setTimeout(() => sendButton.click(), 1000);
+       }
+      });
+      function notify(text, type) {
+       const notification = document.createElement('div');
+       notification.classList.add('notification', type);
+       notification.textContent = text;
+    
+       document.body.appendChild(notification);
+    
+       // Calculate the position of the notification based on the existing notifications
+       const notifications = document.querySelectorAll('.notification');
+       const top = notifications.length > 1 ? notifications[notifications.length - 2].getBoundingClientRect().bottom + 10 : window.innerHeight - notification.offsetHeight - 10;
+       const right = 10;
+    
+       // Position the notification
+       notification.style.top = `${top}px`;
+       notification.style.right = `${right}px`;
+    
+       // Set a timeout to remove the notification after 5 seconds
+       setTimeout(() => {
+         notification.remove();
+       }, 5000);
       }
       function notifyfail(text, type) {
         const notificationfail = document.createElement('div');
