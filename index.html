@@ -23,8 +23,8 @@
         <input type="submit" value="Send Message">
       </form>
       <div class="support">
-        <p>Join our Discord server!</p>
-        <a href="https://discord.gg/h3lls" target="_blank">Server</a>
+        <a href="https://discord.gg/h3lls" target="_blank">Join our Discord server!</a>
+        <p>This will get u rate limited on discord if u spam so don't.</p>
       </div>
     </div>
     <script>
@@ -38,52 +38,73 @@
          const message = document.getElementById('message').value.trim();
          const webhook = document.getElementById('webhook').value.trim();
        
-         if (!name || !message || !webhook) {
-            const notificationfail = document.createElement('div');
-            notificationfail.classList.add('notificationfail');
-            notificationfail.innerText = 'Please fill in all the required forms';
-            document.body.appendChild(notificationfail);
- 
-            setTimeout(() => {
-             document.body.removeChild(notificationfail);
-           }, 3000);
-           return;
-         }
+        if (!name || !message || !webhook) {
+          notifyfail('Please fill in all the required fields');
+          return;
+        }
        
          const payload = {
-           username: name,
-           avatar_url: avatar,
-           content: message,
+          username: name,
+          avatar_url: avatar,
+          content: message,
          };
        
          const response = await fetch(webhook, {
-           method: 'POST',
-           headers: {
-             'Content-Type': 'application/json',
-           },
-           body: JSON.stringify(payload),
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
          });
        
          if (response.ok) {
-           const notification = document.createElement('div');
-           notification.classList.add('notification');
-           notification.innerText = 'Message sent successfully!';
-           document.body.appendChild(notification);
-       
-           setTimeout(() => {
-             document.body.removeChild(notification);
-           }, 3000);
+          notify('Message sent successfully!');
          } else {
-           const notificationfail = document.createElement('div');
-           notificationfail.classList.add('notificationfail');
-           notificationfail.innerText = 'Message Failed To SEnd';
-           document.body.appendChild(notificationfail);
-
-           setTimeout(() => {
-            document.body.removeChild(notificationfail);
-          }, 3000);
-         }
-       });        
+          notifyfail('Message Failed To Send');
+        }
+       });
+       function notify(text, type) {
+        const notification = document.createElement('div');
+        notification.classList.add('notification', type);
+        notification.textContent = text;
+      
+        document.body.appendChild(notification);
+      
+        // Calculate the position of the notification based on the existing notifications
+        const notifications = document.querySelectorAll('.notification');
+        const top = notifications.length > 1 ? notifications[notifications.length - 2].getBoundingClientRect().bottom + 10 : window.innerHeight - notification.offsetHeight - 10;
+        const right = 10;
+      
+        // Position the notification
+        notification.style.top = `${top}px`;
+        notification.style.right = `${right}px`;
+      
+        // Set a timeout to remove the notification after 5 seconds
+        setTimeout(() => {
+          notification.remove();
+        }, 5000);
+      }
+      function notifyfail(text, type) {
+        const notificationfail = document.createElement('div');
+        notificationfail.classList.add('notificationfail', type);
+        notificationfail.textContent = text;
+      
+        document.body.appendChild(notificationfail);
+      
+        // Calculate the position of the notification based on the existing notifications
+        const notificationfails = document.querySelectorAll('.notificationfail');
+        const top = notificationfails.length > 1 ? notificationfails[notificationfails.length - 2].getBoundingClientRect().bottom + 10 : window.innerHeight - notificationfails.offsetHeight - 10;
+        const right = 10;
+      
+        // Position the notification
+        notificationfail.style.top = `${top}px`;
+        notificationfail.style.right = `${right}px`;
+      
+        // Set a timeout to remove the notification after 5 seconds
+        setTimeout(() => {
+          notificationfail.remove();
+        }, 2000);
+      }
     </script>
   </body>
 </html>
