@@ -70,3 +70,27 @@
     text-decoration: none;
   }
   
+  .notification {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: #55c57a;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+  }
+
+  .notificationfail {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: #FF0000;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+  }
+  
