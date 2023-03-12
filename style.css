@@ -4,7 +4,7 @@
   
   body {
     margin: 0;
-    font-family: sans-serif;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
     background-image: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80');
     background-size: cover;
   }
